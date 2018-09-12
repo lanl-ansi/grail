@@ -4,9 +4,9 @@ Gas Reliability Analysis Integrated Library: algorithms for natural gas pipeline
 
 # Instructions:
 
-1. Add the IPOPT MEX binary to the root folder, available at https://www.coin-    or.org/download/binary/Ipopt/ or included with the Opti toolbox at     https://www.inverseproblem.co.nz/OPTI/
+1. Add the IPOPT MEX binary to the root folder, available at https://www.coin-or.org/download/binary/Ipopt/ or included with the Opti toolbox at https://www.inverseproblem.co.nz/OPTI/
 
-2.    grail.exe can be compiled using the MATLAB compiler, and can be distributed for use with     MATLAB runtime, which is available here: https://www.mathworks.com/products/compiler/matlab-    runtime.html
+2.    grail.exe can be compiled using the MATLAB compiler, and can be distributed for use with MATLAB runtime, which is available here: https://www.mathworks.com/products/compiler/matlab-runtime.html
 
 3.    Specify the folder containing the model and parameters in model_folder.txt (e.g. model30t) and add it to the root. Running grail will read the input in that folder and put output in the same folder.
 
