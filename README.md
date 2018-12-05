@@ -17,7 +17,7 @@ Zlotnik, A., Chertkov, M. and Backhaus, S.,  Optimal control of transient flow i
 
 Zlotnik, A., Roald, L., Backhaus, S., Chertkov, M. and Andersson, G.,  Coordinated scheduling for interdependent electric power and natural gas infrastructures. IEEE Transactions on Power Systems, 32(1), pp.600-610. (2017)
 
-Sundar, K. and Zlotnik, A., State and Parameter Estimation for Natural Gas Pipeline Networks using Transient State Data. arXiv preprint arXiv:1803.07156. (2018)
+Sundar, K. and Zlotnik, A., State and Parameter Estimation for Natural Gas Pipeline Networks using Transient State Data. IEEE Transactions on Control Systems Technology, arXiv preprint arXiv:1803.07156. (2018)
 
 # License
 
