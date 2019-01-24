@@ -35,6 +35,13 @@ pp_nodal(:,ss.m.dnodes)=ss.pp0';
 if(ss.m.doZ==1), pp=rho_to_p_nd(pp,ss.c.b1,ss.c.b2,ss.c.psc);
     pp_nodal=rho_to_p_nd(pp_nodal,ss.c.b1,ss.c.b2,ss.c.psc); end
 
+%compute mass in pipes
+if(ss.m.doZ==1), p_density=p_to_rho(pp',ss.c.b1,ss.c.b2,par.ss);
+else p_density=ss.c.psc*pp'/(ss.c.gasR*ss.c.gasT); end
+p_comp=par.ss.cc0;
+out.ss.p_mass=pipe_mass(p_density,p_comp,par.ss.m);    %all pipes
+out.ss.pipe_mass_0=(par.ss.n.disc_to_edge*out.ss.p_mass)';       %original pipes
+
 ss.pnodin=pp_nodal*ss.c.psc;   %nodal pressures (before compression)
 ss.pnodout=pp*ss.c.psc;     %nodal pressures (after compression)
 ss.qqin=qq(:,ss.n.from_flows);
@@ -69,7 +76,7 @@ out.ss.qqoutopt=ss.qqout;                %flow boundary out
 if(par.out.units==1), out.ss.ppopt=out.ss.ppopt/psi_to_pascal; out.ss.ppoptnodal=out.ss.ppoptnodal/psi_to_pascal; 
 out.ss.ppinopt=ss.ppin/psi_to_pascal; out.ss.ppoutopt=ss.ppout/psi_to_pascal; 
 out.ss.qqopt=out.ss.qqopt/mmscfd_to_kgps; out.ss.qqinopt=out.ss.qqinopt/mmscfd_to_kgps;  
-out.ss.qqoutopt=out.ss.qqoutopt/mmscfd_to_kgps; end
+out.ss.qqoutopt=out.ss.qqoutopt/mmscfd_to_kgps; out.ss.pipe_mass_0=out.ss.pipe_mass_0/mmscfd_to_kgps/86400; end
 
 %market flow solution
 ss.m.Yd=interp1qr(ss.m.xd',ss.m.Yq(1:ss.m.FN,:)',ss.tt0)';
@@ -136,7 +143,7 @@ out.ss.flowbalrel(mean(out.ss.flowbal')./mean(out.ss.flowbalrel')<ss.m.opt_tol,:
 % end
 out.ss.ccopt=ss.cc0';
 cposopt=par.ss.m.comp_pos; m=ss.m.mpow;
-qcompopt=qq(:,cposopt(:,2)); cpow_nd=(abs(qcompopt)).*((ss.cc0').^(2*m)-1);
+qcompopt=qq(:,cposopt(:,2)); cpow_nd=(abs(qcompopt)).*((ss.cc0').^(m)-1);
 out.ss.cpowopt=cpow_nd.*kron(ss.m.eff',ones(size(cpow_nd,1),1))*ss.c.mmscfd_to_hp/mmscfd_to_kgps;
 
 
@@ -219,6 +226,8 @@ if(par.out.savecsvoutput==1)
         dlmwrite([mfolder '\output_ss_comp-pmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_pmax(1,:)]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_ss_comp-hpmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_cmax(1,:)]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_ss_flowbalrel.csv'],double([[1:out.ss.n0.nv];out.ss.flowbalrel(1,:)]),'precision',16,'delimiter',',');
+
+        dlmwrite([mfolder '\output_ss_pipe-mass.csv'],double([pipe_cols;out.ss.pipe_mass_0(1,pipe_cols)]),'precision',16,'delimiter',',');
 end
 %     if(par.out.intervals_out>0)
 %         %inputs on intervals

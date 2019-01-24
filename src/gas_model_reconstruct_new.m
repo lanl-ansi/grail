@@ -89,11 +89,13 @@ edge_counter=ne;                        %start counting added edges from ne
 to_edge_new=zeros(nc,1);                %new to edge data for compressors
 from_flows=[1:ne]';                 %new edge flow index entering old edges
 to_flows=[1:ne]';                   %new edge flow index leaving old edges
+pipe_edges=zeros(ne,2);             %edges for each original pipe
 for j=1:length(long_pipes)
     newnodes=[node_counter+1:node_counter+seg_div(j)-1]';   %indices of added nodes for long pipe j
     newedges=[edge_counter+1:edge_counter+seg_div(j)]';     %indices of added edges for long pipe j
     from_flows(long_pipes(j))=edge_counter+1-length(long_pipes);
     to_flows(long_pipes(j))=edge_counter+seg_div(j)-length(long_pipes);
+    pipe_edges(long_pipes(j),:)=[newedges(1) newedges(end)]-length(long_pipes);
     %additional node values
     for k=1:length(newnodes)
         labels{newnodes(k)}='None';
@@ -135,6 +137,7 @@ short_pipes=setdiff([1:ne]',long_pipes);
 for k=1:length(short_pipes)
     from_flows(short_pipes(k))=from_flows(short_pipes(k))-sum(long_pipes<short_pipes(k));
     to_flows(short_pipes(k))=to_flows(short_pipes(k))-sum(long_pipes<short_pipes(k));
+    pipe_edges(short_pipes(k),:)=[short_pipes(k) short_pipes(k)]-sum(long_pipes<short_pipes(k));
 end
 %remove old data for long pipes
 diameter(long_pipes,:)=[];
@@ -146,6 +149,12 @@ to_id(long_pipes,:)=[];
 %new network size
 nv=node_counter;
 ne=edge_counter-length(long_pipes);
+
+%discretized to original edge map
+disc_to_edge=zeros(network_in.ne,ne);
+for j=1:network_in.ne
+    disc_to_edge(j,pipe_edges(j,1):pipe_edges(j,2))=ones(1,pipe_edges(j,2)-pipe_edges(j,1)+1);
+end
 
 %adjacency matrix
 Amm=sparse(nv,ne); Amp=sparse(nv,ne);
@@ -211,4 +220,6 @@ network_out.slack_nodes=slack_nodes;    %slack nodes
 network_out.nonslack_nodes=nonslack_nodes;  %non-slack nodes
 network_out.phys_node=network_in.phys_node;    %gnode physical node locations
 network_out.from_flows=from_flows;  %new edge flow index entering old edges
-network_out.to_flows=to_flows;      %new edge flow index leaving old edges                 
+network_out.to_flows=to_flows;      %new edge flow index leaving old edges    
+network_out.pipe_edges=pipe_edges;
+network_out.disc_to_edge=disc_to_edge;

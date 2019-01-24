@@ -1,5 +1,5 @@
 function [par]=process_output_tr(par)
-% Anatoly Zlotnik, November 2017
+% Anatoly Zlotnik, January 2019
 
 mfolder=par.mfolder;
 out=par.out;
@@ -53,11 +53,20 @@ pp_nodal(:,tr.m.dnodes)=tr.pp0';
 if(tr.m.doZ==1), pp=rho_to_p_nd(pp,tr.c.b1,tr.c.b2,tr.c.psc);
     pp_nodal=rho_to_p_nd(pp_nodal,tr.c.b1,tr.c.b2,tr.c.psc); end
 
+%compute mass in pipes
+if(tr.m.doZ==1), p_density=p_to_rho(pp',tr.c.b1,tr.c.b2,par.tr);
+else p_density=tr.c.psc*pp'/(tr.c.gasR*tr.c.gasT); end
+p_comp=par.tr.cc0;
+out.p_mass=pipe_mass(p_density,p_comp,par.tr.m);    %all pipes
+out.pipe_mass_0=(par.tr.n.disc_to_edge*out.p_mass)';       %original pipes
+
 tr.pnodin=pp_nodal*tr.c.psc;   %nodal pressures (before compression)
 tr.pnodout=pp*tr.c.psc;     %nodal pressures (after compression)
 tr.qqin=qq(:,tr.n.from_flows);
 tr.qqout=qq(:,tr.n.to_flows);
 %pipe inlet and outlet pressure (compressors only at inlets)
+tr.ppin=zeros(par.tr.m.N1+1,tr.n0.ne);
+tr.ppout=zeros(par.tr.m.N1+1,tr.n0.ne);
 for j=1:tr.n0.ne
     if(tr.n0.comp_bool(j)==1)
         %tr.ppin(:,j)=tr.pnodout(:,tr.n0.from_id(j));
@@ -87,7 +96,7 @@ out.qqoutopt=tr.qqout;                %flow boundary out
 if(par.out.units==1), out.ppopt=out.ppopt/psi_to_pascal; out.ppoptnodal=out.ppoptnodal/psi_to_pascal; 
 out.ppinopt=tr.ppin/psi_to_pascal; out.ppoutopt=tr.ppout/psi_to_pascal; 
 out.qqopt=out.qqopt/mmscfd_to_kgps; out.qqinopt=out.qqinopt/mmscfd_to_kgps;  
-out.qqoutopt=out.qqoutopt/mmscfd_to_kgps; end
+out.qqoutopt=out.qqoutopt/mmscfd_to_kgps; out.pipe_mass_0=out.pipe_mass_0/mmscfd_to_kgps/86400; end
 
 %market flow solution
 tr.m.Yd=interp1qr(tr.m.xd',tr.m.Yq(1:tr.m.FN,:)',tr.tt0)';
@@ -162,12 +171,12 @@ if(par.out.dosim==1)
     cpossim=par.tr.m.comp_pos; m=tr.m.mpow;
     out.cccom=interp1qr(out.tt0,tr.cc0',out.ttcom);
     qcompsim=interp1qr(out.tt,sim.qq(:,cpossim(:,2)),ttcomsim); 
-    cpow_nd=(abs(qcompsim)).*((out.cccom).^(2*m)-1);
+    cpow_nd=(abs(qcompsim)).*((out.cccom).^(m)-1);
     out.cpowsim=cpow_nd.*kron(tr.m.eff',ones(size(cpow_nd,1),1))*tr.c.mmscfd_to_hp/mmscfd_to_kgps;
 end
 out.ccopt=tr.cc0';
 cposopt=par.tr.m.comp_pos; m=tr.m.mpow;
-qcompopt=qq(:,cposopt(:,2)); cpow_nd=(abs(qcompopt)).*((tr.cc0').^(2*m)-1);
+qcompopt=qq(:,cposopt(:,2)); cpow_nd=(abs(qcompopt)).*((tr.cc0').^(m)-1);
 out.cpowopt=cpow_nd.*kron(tr.m.eff',ones(size(cpow_nd,1),1))*tr.c.mmscfd_to_hp/mmscfd_to_kgps;
 
 %process locational marginal price
@@ -248,6 +257,7 @@ if(par.out.savecsvoutput==1)
         dlmwrite([mfolder '\output_ts_comp-pmax-mp.csv'],double([[1:out.n0.nc];out.mult0_pmax]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_ts_comp-hpmax-mp.csv'],double([[1:out.n0.nc];out.mult0_cmax]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_ts_flowbalrel.csv'],double([[1:out.n0.nv];out.flowbalrel]),'precision',16,'delimiter',',');
+        dlmwrite([mfolder '\output_ts_pipe-mass.csv'],double([pipe_cols;out.pipe_mass_0(:,pipe_cols)]),'precision',16,'delimiter',',');
     end
     if(par.out.intervals_out>0)
         %inputs on intervals
@@ -302,6 +312,7 @@ if(par.out.savecsvoutput==1)
         [out.mult0_pmax_int]=pts_to_int(out.tt0,out.mult0_pmax,int_bounds');
         [out.mult0_cmax_int]=pts_to_int(out.tt0,out.mult0_cmax,int_bounds');
         [out.flowbalrel_int]=pts_to_int(out.tt0,out.flowbalrel,int_bounds');
+        [out.pipe_mass_int]=pts_to_int(out.tt0,out.pipe_mass_0,int_bounds');
         pipe_cols=[1:out.n0.ne-out.n0.nc]; comp_cols=[out.n0.ne-out.n0.nc+1:out.n0.ne];
         
         %write files
@@ -332,6 +343,7 @@ if(par.out.savecsvoutput==1)
         dlmwrite([mfolder '\output_int_comp-pmax-mp.csv'],double([[1:out.n0.nc];out.mult0_pmax_int]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_int_comp-hpmax-mp.csv'],double([[1:out.n0.nc];out.mult0_cmax_int]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_int_flowbalrel.csv'],double([[1:out.n0.nv];out.flowbalrel_int]),'precision',16,'delimiter',',');
+        dlmwrite([mfolder '\output_int_pipe-mass.csv'],double([pipe_cols;out.pipe_mass_int(:,pipe_cols)]),'precision',16,'delimiter',',');
     end
 end
 if(tr.m.save_state==1)

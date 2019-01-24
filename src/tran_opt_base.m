@@ -213,7 +213,8 @@ if(tr.m.use_init_state==0)  %variables on time points 0 to N
         ipopt_options.cu=[ipopt_options.cu;tr.m.binequb]; end
 
     if(v==1)
-    xu0=full(min(max(2*rand(size(xu0)),ipopt_options.lb),ipopt_options.ub));
+    %xu0=full(min(max(2*rand(size(xu0)),ipopt_options.lb),ipopt_options.ub));
+    xu0=full(min(max(xu0,ipopt_options.lb),ipopt_options.ub));
     end
 elseif(tr.m.use_init_state==1) %variables on time points 1 to N
     %lower bounds on variables
@@ -278,7 +279,8 @@ elseif(tr.m.use_init_state==1) %variables on time points 1 to N
     ipopt_options.cu = [tr.m.Beq;zeros(M*N,1);dischplimu;hplimu];   %upper bounds on the constraint functions.
 
     if(v==1)
-    xu0=full(min(max(2*rand(size(xu0)),ipopt_options.lb),ipopt_options.ub));
+    %xu0=full(min(max(2*rand(size(xu0)),ipopt_options.lb),ipopt_options.ub));
+    xu0=full(min(max(xu0,ipopt_options.lb),ipopt_options.ub));
     end
 end
 
@@ -454,6 +456,7 @@ if(tr.m.save_state==1)
         tr.mult0_pmax(:,tr.m.state_save_pts);...
         tr.mult0_cmax(:,tr.m.state_save_pts)];
 end
+
 
 if(tr.Nvec(end)>1),
 tr=rmfield(tr,{'dout','dlbout','dubout','prdout','prslout'}); end

@@ -71,6 +71,7 @@ par.out.plotcomps=inputpar(3,7);
 par.out.plotdifferentials=inputpar(3,7);
 par.out.plotcompshadow=inputpar(3,7);
 par.out.plotnetwork=inputpar(3,7);
+par.out.plotpipemass=inputpar(3,7);
 par.out.plotpdf=inputpar(4,7);
 par.out.closeafter=inputpar(5,7);
 par.out.plotaccuracy=0;

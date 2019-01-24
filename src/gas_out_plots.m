@@ -300,10 +300,26 @@ if(par.out.plotaccuracy==1)
     eval(['print -depsc ' mfolder '\12accuracy.eps']), end
 end
 
+if(par.out.plotpipemass==1)
+    %optimization plot
+    f13=figure(13);
+    set(f13,'position',[20,400,800,400],'Color',[1 1 1]);
+    plot(out.tt0,out.pipe_mass_0), axis('tight'), xlabel('time (hours)')
+    if(par.out.units==1), title('Optimization Solution Mass in Pipe (mmscf)','fontweight','bold'), else
+        title('Optimization Solution Mass in Pipe (kg)','fontweight','bold'), end   
+    if(par.out.plotpdf==1)
+    set(gcf,'PaperPositionMode', 'manual','PaperUnits','points', ...
+        'Paperposition',paperpos), set(gcf, 'PaperSize', papersize)
+    eval(['print -dpdf ' mfolder '\5opt.pdf']), end
+    if(par.out.ploteps==1)
+    set(gcf,'PaperPositionMode','auto')
+    eval(['print -depsc ' mfolder '\13mass.eps']), end
+end
+
 if(par.out.plotnetwork==1)
-    f13=figure(13); clf
+    f14=figure(14); clf
     plotpos=[20,100,800,800]; paperpos=[0 0 800 800]; papersize=[800 800];
-    set(f13,'position',plotpos,'Color',[1 1 1]);
+    set(f14,'position',plotpos,'Color',[1 1 1]);
     gas_model_plotter_new(out.n0);
     if(par.out.plotpdf==1)
     set(gcf,'PaperPositionMode', 'manual','PaperUnits','points', ...
@@ -311,7 +327,7 @@ if(par.out.plotnetwork==1)
     eval(['print -dpdf ' mfolder '\13network.pdf']), end
     if(par.out.ploteps==1)
     set(gcf,'PaperPositionMode','auto')
-    eval(['print -depsc ' mfolder '\13network.eps']), end
+    eval(['print -depsc ' mfolder '\14network.eps']), end
 end
 
 
