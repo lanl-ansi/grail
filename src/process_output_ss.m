@@ -79,8 +79,10 @@ out.ss.qqopt=out.ss.qqopt/mmscfd_to_kgps; out.ss.qqinopt=out.ss.qqinopt/mmscfd_t
 out.ss.qqoutopt=out.ss.qqoutopt/mmscfd_to_kgps; out.ss.pipe_mass_0=out.ss.pipe_mass_0/mmscfd_to_kgps/86400; end
 
 %market flow solution
-ss.m.Yd=interp1qr(ss.m.xd',ss.m.Yq(1:ss.m.FN,:)',ss.tt0)';
+ss.m.Yd=[ss.m.Yq1(1:ss.m.FN) ss.m.Yq1(1:ss.m.FN)];
 ss.m.Yd(ss.m.guniqueind,:)=ss.m.Yd(ss.m.guniqueind,:)+ss.m.gtod*ss.fd0;
+%ss.m.Yd=interp1qr(ss.m.xd',ss.m.Yq(1:ss.m.FN,:)',ss.tt0)';
+%ss.m.Yd(ss.m.guniqueind,:)=ss.m.Yd(ss.m.guniqueind,:)+ss.m.gtod*ss.fd0;
 ss.m.Ygd=ss.fd0(1:length(ss.m.gd),:);
 ss.m.Ygs=-ss.fd0(length(ss.m.gd)+1:length(ss.m.gall),:);
 
