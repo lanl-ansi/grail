@@ -1,6 +1,6 @@
 %% Gas Transient Optimization and Simulation
-% Anatoly Zlotnik, updated August 2018
-function []=grail()
+% Anatoly Zlotnik, updated January 2019
+function [par]=grail(fpath)
 
 % 1) steady state optimization
 % 2) transient optimization
@@ -15,16 +15,21 @@ function []=grail()
 % ode solver: ode15i
 
 %% Input data for problem definition
-clear
+%clear
 
 %expiration
 %datestr=date;
 %if(datenum(datestr)>datenum('30-Mar-2018')), return; end
 
-fnameid=fopen('model_folder.txt');
-fname = textscan(fnameid, '%s');
-fclose(fnameid);
-par.mfolder=fname{1}{1};
+if(nargin==0)
+    fnameid=fopen('model_folder.txt');
+    fname = textscan(fnameid, '%s');
+    fclose(fnameid);
+    par.mfolder=fname{1}{1};
+elseif(nargin>0)
+    par.mfolder=fpath;
+end
+
 
 par=options_input(par);
 
@@ -74,7 +79,7 @@ if(par.ss.ip_info.status~=0), disp('Steady state optimization not feasible'),
     fprintf(fid,['Steady-state solve status: ' num2str(par.ss.ip_info.status) '\n']);
     fclose(fid);
 end
-if(par.out.steadystateonly==1), [par]=process_output_ss(par); return; end
+if(par.out.steadystateonly==1), [par]=process_output_ss(par); if(par.out.intervals_out>0), gas_out_plots_i(par); end; return; end
 if(par.out.ss_check_exit==1), return; end
 end
 %% transient solve

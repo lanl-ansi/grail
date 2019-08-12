@@ -108,6 +108,7 @@ end
 
 %time discretization
 if(par.out.doss==1 || par.out.dosim==1)
+    par.out.ss=par.out;
     par.ss.Nvec=[0];    % vector of time discretization orders for optimization sequence (steady state)
     par.ss.lmax=1;      % max segment length (km) (steady state)
     if(par.out.dosim==0) par.ss.lmax=1000; end

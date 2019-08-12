@@ -230,88 +230,90 @@ if(par.out.savecsvoutput==1)
         dlmwrite([mfolder '\output_ss_flowbalrel.csv'],double([[1:out.ss.n0.nv];out.ss.flowbalrel(1,:)]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_ss_pipe-mass.csv'],double([pipe_cols;out.ss.pipe_mass_0(1,pipe_cols)]),'precision',16,'delimiter',',');
 end
-%     if(par.out.intervals_out>0)
-%         %inputs on intervals
-%         out.ss.int_qbar=ss.int_qbar; out.ss.int_dmax=ss.int_dmax; out.ss.int_dmin=ss.int_dmin;
-%         out.ss.int_smax=ss.int_smax; out.ss.int_smin=ss.int_smin; out.ss.int_cd=ss.int_cd;
-%         out.ss.int_cs=ss.int_cs; out.ss.int_cslack=ss.int_cslack; out.ss.int_pslack=ss.int_pslack;
-%         if(ss.intervals>0 && ss.units==1)
-%             out.ss.int_cd=out.ss.int_cd*mmscfd_to_kgps;
-%             out.ss.int_cs=out.ss.int_cs*mmscfd_to_kgps; 
-%             out.ss.int_cslack=out.ss.int_cslack*mmscfd_to_kgps;
-%         end
-%         %------------------
-%         %revert to full gnode index list
-%         out.ss.gdsol_all=zeros(2,ss.n0.ng);
-%         out.ss.gdsol_all(:,ss.dmax_pos)=out.ss.gdsol;
-%         out.ss.gssol_all=zeros(2,ss.n0.ng);
-%         out.ss.gssol_all(:,ss.smax_pos)=out.ss.gssol;
-%         
-%         In=par.out.intervals_out;  %24 intervals on optimization period (1 day)
-%         T=ss.c.T/3600;             %time in hours
-%         int_bounds=[0:T/In:T]; out.ss.int_bounds=int_bounds;
-%         [out.ss.dbase_int]=pts_to_int(ss.m.xd'/3600,out.ss.dbase,int_bounds');
-%         [out.ss.gsub_int]=pts_to_int(ss.m.xd'/3600,out.ss.gsub,int_bounds');
-%         [out.ss.gslb_int]=pts_to_int(ss.m.xd'/3600,out.ss.gslb,int_bounds');
-%         [out.ss.gdub_int]=pts_to_int(ss.m.xd'/3600,out.ss.gdub,int_bounds');
-%         [out.ss.gdlb_int]=pts_to_int(ss.m.xd'/3600,out.ss.gdlb,int_bounds');
-%         [out.ss.gdsol_int]=pts_to_int(out.ss.tt0,out.ss.gdsol_all,int_bounds');
-%         [out.ss.gssol_int]=pts_to_int(out.ss.tt0,out.ss.gssol_all,int_bounds');
-%         [out.ss.dgflows_int]=pts_to_int(out.ss.tt0,out.ss.dgflows_all,int_bounds');
-%         [out.ss.supp_flow_int]=pts_to_int(out.ss.tt0,out.ss.supp_flow,int_bounds');
-%         [out.ss.flows_all_int]=pts_to_int(out.ss.tt0,out.ss.flows_all',int_bounds');
-%         [out.ss.Prslack_int]=pts_to_int(ss.m.xd'/3600,ss.m.Prslack',int_bounds');
-%         [out.ss.Prs_int]=pts_to_int(ss.m.xd'/3600,ss.m.Prs',int_bounds');
-%         [out.ss.Prd_int]=pts_to_int(ss.m.xd'/3600,ss.m.Prd',int_bounds');
-%         %------------------
-%         [out.ss.ppinopt_int]=pts_to_int(out.ss.tt0,out.ss.ppinopt,int_bounds');
-%         [out.ss.ppoutopt_int]=pts_to_int(out.ss.tt0,out.ss.ppoutopt,int_bounds');
-%         [out.ss.qqinopt_int]=pts_to_int(out.ss.tt0,out.ss.qqinopt,int_bounds');
-%         [out.ss.qqoutopt_int]=pts_to_int(out.ss.tt0,out.ss.qqoutopt,int_bounds');
-%         [out.ss.ppoptnodal_int]=pts_to_int(out.ss.tt0,out.ss.ppoptnodal,int_bounds');
-%         [out.ss.dgflows_int]=pts_to_int(out.ss.tt0,out.ss.dgflows,int_bounds');
-%         [out.ss.supp_flow_int]=pts_to_int(out.ss.tt0,out.ss.supp_flow,int_bounds');
-%         [out.ss.ccopt_int]=pts_to_int(out.ss.tt0,out.ss.ccopt,int_bounds');
-%         [out.ss.csetopt_int]=pts_to_int(out.ss.tt0,out.ss.csetopt,int_bounds');
-%         [out.ss.cpowopt_int]=pts_to_int(out.ss.tt0,out.ss.cpowopt,int_bounds');
-%         [out.ss.trlmpnodal_int]=pts_to_int(out.ss.tt0,out.ss.trlmpnodal,int_bounds');
-%         [out.ss.dglmp_int]=pts_to_int(out.ss.tt0,out.ss.dglmp,int_bounds');
-%         [out.ss.lmpin_int]=pts_to_int(out.ss.tt0,out.ss.lmpin,int_bounds');
-%         [out.ss.lmpout_int]=pts_to_int(out.ss.tt0,out.ss.lmpout,int_bounds');
-%         [out.ss.mult0_pmax_int]=pts_to_int(out.ss.tt0,out.ss.mult0_pmax,int_bounds');
-%         [out.ss.mult0_cmax_int]=pts_to_int(out.ss.tt0,out.ss.mult0_cmax,int_bounds');
-%         [out.ss.flowbalrel_int]=pts_to_int(out.ss.tt0,out.ss.flowbalrel,int_bounds');
-%         pipe_cols=[1:out.ss.n0.ne-out.ss.n0.nc]; comp_cols=[out.ss.n0.ne-out.ss.n0.nc+1:out.ss.n0.ne];
-%         
-% 
-%         
-%         %write files
-%         dlmwrite([mfolder '\output_int_pipe-pressure-in.csv'],double([pipe_cols;out.ss.ppinopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_pipe-pressure-out.ss.csv'],double([pipe_cols;out.ss.ppoutopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-pressure-in.csv'],double([1:out.ss.n0.nc;out.ss.ppinopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-pressure-out.ss.csv'],double([1:out.ss.n0.nc;out.ss.ppoutopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_pipe-flow-in.csv'],double([pipe_cols;out.ss.qqinopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_pipe-flow-out.ss.csv'],double([pipe_cols;out.ss.qqoutopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-flow-in.csv'],double([1:out.ss.n0.nc;out.ss.qqinopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-flow-out.ss.csv'],double([1:out.ss.n0.nc;out.ss.qqoutopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_nodal-pressure.csv'],double([[1:out.ss.n0.nv];out.ss.ppoptnodal_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_gnode-physical-withdrawals.csv'],double([ss.m.guniqueind';out.ss.dgflows_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_gnode-supply-flows.csv'],double([ss.n0.phys_node';out.ss.gssol_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_gnode-demand-flows.csv'],double([ss.n0.phys_node';out.ss.gdsol_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_slack-flows.csv'],double([out.ss.pn';out.ss.supp_flow_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-ratios.csv'],double([[1:out.ss.cn];out.ss.ccopt_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-discharge-pressure.csv'],double([[1:out.ss.cn];out.ss.csetopt_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-power.csv'],double([[1:out.ss.cn];out.ss.cpowopt_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_lmp-nodal-all.csv'],double([out.ss.fn';out.ss.trlmpnodal_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_lmp-bidders.csv'],double([out.ss.gunique';out.ss.dglmp_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_pipe-lmp-in.csv'],double([pipe_cols;out.ss.lmpin_int(:,pipe_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_pipe-lmp-out.ss.csv'],double([pipe_cols;out.ss.lmpout_int(:,pipe_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-lmp-in.csv'],double([1:out.ss.n0.nc;out.ss.lmpin_int(:,comp_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-lmp-out.ss.csv'],double([1:out.ss.n0.nc;out.ss.lmpout_int(:,comp_cols)]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-pmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_pmax_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_comp-hpmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_cmax_int]),'precision',16,'delimiter',',');
-%         dlmwrite([mfolder '\output_int_flowbalrel.csv'],double([[1:out.ss.n0.nv];out.ss.flowbalrel_int]),'precision',16,'delimiter',',');
-%     end
+    if(par.out.intervals_out>0)
+        %inputs on intervals
+        out.ss.int_qbar=ss.int_qbar; out.ss.int_dmax=ss.int_dmax; out.ss.int_dmin=ss.int_dmin;
+        out.ss.int_smax=ss.int_smax; out.ss.int_smin=ss.int_smin; out.ss.int_cd=ss.int_cd;
+        out.ss.int_cs=ss.int_cs; out.ss.int_cslack=ss.int_cslack; out.ss.int_pslack=ss.int_pslack;
+        if(ss.intervals>0 && ss.units==1)
+            out.ss.int_cd=out.ss.int_cd*mmscfd_to_kgps;
+            out.ss.int_cs=out.ss.int_cs*mmscfd_to_kgps; 
+            out.ss.int_cslack=out.ss.int_cslack*mmscfd_to_kgps;
+        end
+        %------------------
+        %revert to full gnode index list
+        out.ss.gdsol_all=zeros(2,ss.n0.ng);
+        out.ss.gdsol_all(:,ss.dmax_pos)=out.ss.gdsol;
+        out.ss.gssol_all=zeros(2,ss.n0.ng);
+        out.ss.gssol_all(:,ss.smax_pos)=out.ss.gssol;
+        
+        In=par.out.intervals_out;  %24 intervals on optimization period (1 day)
+        T=ss.c.T/3600;             %time in hours
+        int_bounds=[0:T/In:T]; out.ss.int_bounds=int_bounds;
+        [out.ss.dbase_int]=pts_to_int(ss.m.xd'/3600,out.ss.dbase,int_bounds');
+        [out.ss.gsub_int]=pts_to_int(ss.m.xd'/3600,out.ss.gsub,int_bounds');
+        [out.ss.gslb_int]=pts_to_int(ss.m.xd'/3600,out.ss.gslb,int_bounds');
+        [out.ss.gdub_int]=pts_to_int(ss.m.xd'/3600,out.ss.gdub,int_bounds');
+        [out.ss.gdlb_int]=pts_to_int(ss.m.xd'/3600,out.ss.gdlb,int_bounds');
+        [out.ss.gdsol_int]=pts_to_int(out.ss.tt0,out.ss.gdsol_all,int_bounds');
+        [out.ss.gssol_int]=pts_to_int(out.ss.tt0,out.ss.gssol_all,int_bounds');
+        [out.ss.dgflows_int]=pts_to_int(out.ss.tt0,out.ss.dgflows_all,int_bounds');
+        [out.ss.supp_flow_int]=pts_to_int(out.ss.tt0,out.ss.supp_flow,int_bounds');
+        [out.ss.flows_all_int]=pts_to_int(out.ss.tt0,out.ss.flows_all',int_bounds');
+        [out.ss.Prslack_int]=pts_to_int(ss.m.xd'/3600,ss.m.Prslack',int_bounds');
+        [out.ss.Prs_int]=pts_to_int(ss.m.xd'/3600,ss.m.Prs',int_bounds');
+        [out.ss.Prd_int]=pts_to_int(ss.m.xd'/3600,ss.m.Prd',int_bounds');
+        %------------------
+        [out.ss.ppinopt_int]=pts_to_int(out.ss.tt0,out.ss.ppinopt,int_bounds');
+        [out.ss.ppoutopt_int]=pts_to_int(out.ss.tt0,out.ss.ppoutopt,int_bounds');
+        [out.ss.qqinopt_int]=pts_to_int(out.ss.tt0,out.ss.qqinopt,int_bounds');
+        [out.ss.qqoutopt_int]=pts_to_int(out.ss.tt0,out.ss.qqoutopt,int_bounds');
+        [out.ss.ppoptnodal_int]=pts_to_int(out.ss.tt0,out.ss.ppoptnodal,int_bounds');
+        [out.ss.dgflows_int]=pts_to_int(out.ss.tt0,out.ss.dgflows,int_bounds');
+        [out.ss.supp_flow_int]=pts_to_int(out.ss.tt0,out.ss.supp_flow,int_bounds');
+        [out.ss.ccopt_int]=pts_to_int(out.ss.tt0,out.ss.ccopt,int_bounds');
+        [out.ss.csetopt_int]=pts_to_int(out.ss.tt0,out.ss.csetopt,int_bounds');
+        [out.ss.cpowopt_int]=pts_to_int(out.ss.tt0,out.ss.cpowopt,int_bounds');
+        [out.ss.trlmpnodal_int]=pts_to_int(out.ss.tt0,out.ss.trlmpnodal,int_bounds');
+        [out.ss.dglmp_int]=pts_to_int(out.ss.tt0,out.ss.dglmp,int_bounds');
+        [out.ss.lmpin_int]=pts_to_int(out.ss.tt0,out.ss.lmpin,int_bounds');
+        [out.ss.lmpout_int]=pts_to_int(out.ss.tt0,out.ss.lmpout,int_bounds');
+        [out.ss.mult0_pmax_int]=pts_to_int(out.ss.tt0,out.ss.mult0_pmax,int_bounds');
+        [out.ss.mult0_cmax_int]=pts_to_int(out.ss.tt0,out.ss.mult0_cmax,int_bounds');
+        [out.ss.flowbalrel_int]=pts_to_int(out.ss.tt0,out.ss.flowbalrel,int_bounds');
+        [out.ss.pipe_mass_int]=pts_to_int(out.ss.tt0,out.ss.pipe_mass_0,int_bounds');
+        pipe_cols=[1:out.ss.n0.ne-out.ss.n0.nc]; comp_cols=[out.ss.n0.ne-out.ss.n0.nc+1:out.ss.n0.ne];
+        
+
+        if(par.out.steadystateonly==0)
+            %write files
+            dlmwrite([mfolder '\output_int_pipe-pressure-in.csv'],double([pipe_cols;out.ss.ppinopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_pipe-pressure-out.ss.csv'],double([pipe_cols;out.ss.ppoutopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-pressure-in.csv'],double([1:out.ss.n0.nc;out.ss.ppinopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-pressure-out.ss.csv'],double([1:out.ss.n0.nc;out.ss.ppoutopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_pipe-flow-in.csv'],double([pipe_cols;out.ss.qqinopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_pipe-flow-out.ss.csv'],double([pipe_cols;out.ss.qqoutopt_int(:,pipe_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-flow-in.csv'],double([1:out.ss.n0.nc;out.ss.qqinopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-flow-out.ss.csv'],double([1:out.ss.n0.nc;out.ss.qqoutopt_int(:,comp_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_nodal-pressure.csv'],double([[1:out.ss.n0.nv];out.ss.ppoptnodal_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_gnode-physical-withdrawals.csv'],double([ss.m.guniqueind';out.ss.dgflows_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_gnode-supply-flows.csv'],double([ss.n0.phys_node';out.ss.gssol_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_gnode-demand-flows.csv'],double([ss.n0.phys_node';out.ss.gdsol_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_slack-flows.csv'],double([out.ss.pn';out.ss.supp_flow_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-ratios.csv'],double([[1:out.ss.cn];out.ss.ccopt_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-discharge-pressure.csv'],double([[1:out.ss.cn];out.ss.csetopt_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-power.csv'],double([[1:out.ss.cn];out.ss.cpowopt_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_lmp-nodal-all.csv'],double([out.ss.fn';out.ss.trlmpnodal_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_lmp-bidders.csv'],double([out.ss.gunique';out.ss.dglmp_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_pipe-lmp-in.csv'],double([pipe_cols;out.ss.lmpin_int(:,pipe_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_pipe-lmp-out.ss.csv'],double([pipe_cols;out.ss.lmpout_int(:,pipe_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-lmp-in.csv'],double([1:out.ss.n0.nc;out.ss.lmpin_int(:,comp_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-lmp-out.ss.csv'],double([1:out.ss.n0.nc;out.ss.lmpout_int(:,comp_cols)]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-pmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_pmax_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_comp-hpmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_cmax_int]),'precision',16,'delimiter',',');
+            dlmwrite([mfolder '\output_int_flowbalrel.csv'],double([[1:out.ss.n0.nv];out.ss.flowbalrel_int]),'precision',16,'delimiter',',');
+        end
+    end
 
 if(ss.m.save_state==1)
 dlmwrite([mfolder '\output_ss_state_save.csv'],double(full(ss.state_save)),'precision',16,'delimiter',',');
