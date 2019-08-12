@@ -1,5 +1,5 @@
 function [par]=process_output_ss(par)
-% Anatoly Zlotnik, November 2017
+% Anatoly Zlotnik, February 2019
 
 % mfolder=par.mfolder;
 out=par.out;
@@ -228,7 +228,6 @@ if(par.out.savecsvoutput==1)
         dlmwrite([mfolder '\output_ss_comp-pmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_pmax(1,:)]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_ss_comp-hpmax-mp.csv'],double([[1:out.ss.n0.nc];out.ss.mult0_cmax(1,:)]),'precision',16,'delimiter',',');
         dlmwrite([mfolder '\output_ss_flowbalrel.csv'],double([[1:out.ss.n0.nv];out.ss.flowbalrel(1,:)]),'precision',16,'delimiter',',');
-
         dlmwrite([mfolder '\output_ss_pipe-mass.csv'],double([pipe_cols;out.ss.pipe_mass_0(1,pipe_cols)]),'precision',16,'delimiter',',');
 end
 %     if(par.out.intervals_out>0)

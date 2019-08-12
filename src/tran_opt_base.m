@@ -326,7 +326,8 @@ tr.m.objsc=tr.m.Ts/2/tr.m.odw;                 %this scales the objective for ip
 
 %Jacobian sparsity pattern
 JS=sparse(abs(sign(pipe_jacobian_base(xr,tr.m))));    
-  
+sum(sum(abs(JS)>0))/prod(size(JS))
+
 %Set the IPOPT options.
 ipopt_options.ipopt.mu_strategy = 'adaptive';
 ipopt_options.ipopt.hessian_approximation = 'limited-memory';
@@ -392,7 +393,7 @@ if(tr.m.use_init_state==0)
     tr.mult0_cmax=[reshape(ip_info.lambda(N1*(M+C)+1:N1*(M+2*C)),C,N1) ip_info.lambda(N1*(M+C)+1:N1*(M+C)+C)]/tr.m.odw;
 elseif(tr.m.use_init_state==1)
     %restriction to original horizon if extension used
-    tr.pp0=[pp_init reshape(xf(1:N*FN),FN,N) pp_init]; 
+    tr.pp0=[pp_init reshape(xf(1:N*FN),FN,N) xf(1:FN) pp_init]; 
     tr.qq0=[qq_init reshape(xf(N*FN+1:N*M),NE,N) xf(N*FN+1:N*FN+NE) qq_init];
     tr.cc0=[cc_init reshape(xf(N*M+1:N*M+N*C),C,N) xf(N*M+1:N*M+C) cc_init];
     tr.fd0=[fd_init reshape(xf(N*(M+C)+1:N*(M+C+GN)),GN,N) xf(N*(M+C)+1:N*(M+C)+GN) fd_init];

@@ -18,7 +18,8 @@ a1=344400; a2=1.785; a3=3.825;
 b1=1+a1*(101.325*1000/par.c.psi_to_pascal)*10^(a2*par.c.gasG)/(1.8*par.c.gasT)^a3;
 b2=a1*10^(a2*par.c.gasG)/par.c.psi_to_pascal/(1.8*par.c.gasT)^a3;
 if(par.m.doZ==1), par.c.b1=b1; par.c.b2=b2;
-else par.c.a=sqrt(par.c.gasR*par.c.gasT/(b1+b2*mean([par.n.p_min;par.n.p_max]))); end
+else par.c.a=sqrt(par.c.gasR*par.c.gasT); end
+%else par.c.a=sqrt(par.c.gasR*par.c.gasT/(b1+b2*mean([par.n.p_min;par.n.p_max]))); end
 
 
 %if(~exist('par.m'))

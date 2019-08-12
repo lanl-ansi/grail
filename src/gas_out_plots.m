@@ -77,20 +77,23 @@ if(par.out.plotsolflow==1)
     f3=figure(3); clf
     set(f3,'position',plotpos,'Color',[1 1 1]);
     subaxis(1,3,1,'MarginLeft',0.05,'SpacingHoriz',0.05), 
-    plot(out.tt0,[-out.supp_flow out.dgflows],'LineWidth',3), xlabel('hours'), hold off
+    %plot(out.tt0,[-out.supp_flow out.dgflows],'LineWidth',3), xlabel('hours'), hold off
+    plot(out.tt0,[out.dgflows],'LineWidth',3), xlabel('hours'), hold off
     if(par.out.units==1), title('Cleared Nodal Gas Withdrawals (mmscfd)','fontweight','bold'), else
         title('Cleared Nodal Gas Withdrawals (kg/s)','fontweight','bold'), end
-    legend(num2str([out.PN;out.gunique]),'Location','SouthEast')
+    %legend(num2str([out.PN;out.gunique]),'Location','SouthEast')
+    legend(num2str([out.gunique]),'Location','SouthEast')
     subaxis(1,3,2,'SpacingHoriz',0.05),
     plot(out.tt0,out.gdsol,'LineWidth',3), axis('tight'), xlabel('hours'),
     if(par.out.units==1), title('Demand gNode Purchases (mmscfd)','fontweight','bold'), else
         title('Demand gNode Purchases  (kg/s)','fontweight','bold'), end
     legend(num2str(out.gd),'Location','SouthEast')
     subaxis(1,3,3,'MarginRight',0.05,'SpacingHoriz',0.05),
-    plot(out.tt0,[out.supp_flow out.gssol],'LineWidth',3), axis('tight'), xlabel('hours'),
+    %plot(out.tt0,[out.supp_flow out.gssol],'LineWidth',3), axis('tight'), xlabel('hours'),
+    plot(out.tt0,[out.gssol],'LineWidth',3), axis('tight'), xlabel('hours'),
     if(par.out.units==1), title('Supply gNode Sales (mmscfd)','fontweight','bold'), else
         title('Supply gNode Sales  (kg/s)','fontweight','bold'), end
-    legend(num2str([out.PN;out.gs]),'Location','SouthEast')
+    legend(num2str([out.gs]),'Location','SouthEast')
     if(par.out.plotpdf==1)
     set(gcf,'PaperPositionMode', 'manual','PaperUnits','points', ...
         'Paperposition',paperpos), set(gcf, 'PaperSize', papersize)
