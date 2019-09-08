@@ -1,10 +1,10 @@
 function [par]=options_input(par)
-%Anatoly Zlotnik, modified September 2017
+%Anatoly Zlotnik, modified September 2019
 
 %steady-state solve and simulation options
 par.out.doss=1;     %do steady-state solve?
 par.out.dosim=0;    %do simulations?
-par.out.simstart=1; %0=start from transient IC, 1=start from ss solution
+par.out.simstart=1; %0=start sim from transient initial condition, 1=start sim from ss solution
 
 %read input parameter spreadsheet
 if(exist([par.mfolder '\input_param.xls'])==2)

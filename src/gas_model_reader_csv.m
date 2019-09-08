@@ -1,5 +1,5 @@
 function [network]=gas_model_reader_csv(par)
-% Anatoly Zlotnik, revised January 2018
+% Anatoly Zlotnik, modified September 2019
 %
 % usage: [network]=gas_model_reader_xls(mod_num)
 % function: read static network data from xls files and translate to txt format
@@ -55,12 +55,14 @@ mfolder=par.mfolder;
 inch_to_m=0.0254;
 miles_to_km=1.60934;
 psi_to_pascal=6894.75729;
+m_to_ft=3.28084;
 %mmscfd to kgps - see conversion notes.  
 %this depends on gas composition and definition of "standard"
 universalR=8314.472;    %J/k-mol * K
 standardP=101.325;      %Pascal (=14.69psi)
 standardT=288.706;      %Kelvin (=60F)
-mmscfd_to_kgps=(10^3)*0.02832/86400*(standardP/(universalR*standardT)*(100)^3)*par.tr.c.gasG*28.9626;
+molecwghtAir=28.9626;   %Molecular weight of air (g mol)
+mmscfd_to_kgps=(10^3)*(1/m_to_ft)^3/86400*(standardP/(universalR*standardT)*(100)^3)*par.tr.c.gasG*molecwghtAir;
 
 %import from xls
 %[node_data,node_text]=xlsread([mfolder '\input_network_nodes.xls']);
@@ -91,7 +93,7 @@ comp_name=comp_text(2:end,2);
 gnode_name=gnode_text(2:end,2);
 
 %compressor pipe standard
-if(par.out.units==0), stdL=1; stdD=1;           %250 m and 1 m
+if(par.out.units==0), stdL=.25; stdD=1;           %250 m and 1 m
 else, stdL=.25/miles_to_km; stdD=1/inch_to_m;   %.15 miles and 39.4"
 end
 stdLambda=0.001;
