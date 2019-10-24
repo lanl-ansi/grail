@@ -1,0 +1,3 @@
+﻿comp_id,comp_name,from_node,to_node,c_min,c_max,max_power,min_flow,max_flow
+1,Comp1,1,5,1,1.4,3000000,0,1000
+2,Comp2,2,6,1,1.35,2000000,0,1000

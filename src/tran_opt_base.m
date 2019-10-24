@@ -213,8 +213,8 @@ if(tr.m.use_init_state==0)  %variables on time points 0 to N
         ipopt_options.cu=[ipopt_options.cu;tr.m.binequb]; end
 
     if(v==1)
-    %xu0=full(min(max(2*rand(size(xu0)),ipopt_options.lb),ipopt_options.ub));
-    xu0=full(min(max(xu0,ipopt_options.lb),ipopt_options.ub));
+    xu0=full(min(max(rand(size(xu0)).*(ipopt_options.ub-ipopt_options.lb)+ipopt_options.lb,ipopt_options.lb),ipopt_options.ub));
+    %xu0=full(min(max(xu0,ipopt_options.lb),ipopt_options.ub));
     end
 elseif(tr.m.use_init_state==1) %variables on time points 1 to N
     %lower bounds on variables
@@ -326,7 +326,7 @@ tr.m.objsc=tr.m.Ts/2/tr.m.odw;                 %this scales the objective for ip
 
 %Jacobian sparsity pattern
 JS=sparse(abs(sign(pipe_jacobian_base(xr,tr.m))));    
-sum(sum(abs(JS)>0))/prod(size(JS))
+%sum(sum(abs(JS)>0))/prod(size(JS))
 
 %Set the IPOPT options.
 ipopt_options.ipopt.mu_strategy = 'adaptive';
@@ -340,9 +340,9 @@ ipopt_options.ipopt.tol = ipopt_tol;
 ipopt_options.ipopt.constr_viol_tol = ipopt_tol/10;
 ipopt_options.ipopt.acceptable_tol= ipopt_tol;
 ipopt_options.ipopt.output_file=tr.output_file;
-  
+
 % The callback functions.
-if(v<length(tr.Nvec))
+if(v<length(tr.Nvec) || tr.Nvec(end)==0)
     ipopt_funcs.objective         = @(xu) pipe_obj_base(xu,tr.m);
     ipopt_funcs.gradient          = @(xu) pipe_grad_base(xu,tr.m);
 else
@@ -378,7 +378,7 @@ ipopt_net_time=toc, tr.m.ipopt_net_time=ipopt_net_time;
 % save output
 
 xf=tr.xf;
-tr.objval=pipe_obj_base(xf,tr.m);
+[tr.objval,tr.objecon,tr.objeff]=pipe_obj_base(xf,tr.m);
 tr.resid=pipe_constraints_base(xf,tr.m);
 tr.ip_info=ip_info;
 

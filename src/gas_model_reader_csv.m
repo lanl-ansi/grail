@@ -56,6 +56,7 @@ inch_to_m=0.0254;
 miles_to_km=1.60934;
 psi_to_pascal=6894.75729;
 m_to_ft=3.28084;
+hp_to_watt=745.7;
 %mmscfd to kgps - see conversion notes.  
 %this depends on gas composition and definition of "standard"
 universalR=8314.472;    %J/k-mol * K
@@ -120,9 +121,9 @@ loc_node=comp_data(:,3);    %location node for compressor
 to_edge=[size(pipe_data,1)+1:size(pipe_data,1)+nc]';       %to edge
 c_min=comp_data(:,5);       %min compression ratio
 c_max=comp_data(:,6);       %max compression ratio
-hp_max=comp_data(:,7);         %max compressor power (hp)
-flow_min=comp_data(:,8);         %min compressor flow (mmscfd)
-flow_max=comp_data(:,9);         %max compressor flow (mmscfd)
+hp_max=comp_data(:,7);         %max compressor power (MW)
+flow_min=comp_data(:,8);         %min compressor flow (kg/s)
+flow_max=comp_data(:,9);         %max compressor flow (kg/s)
 comp_bool=[zeros(ne,1);ones(nc,1)];      % = 1 if compressor on the edge, 0 otherwise
 comp_pos=[loc_node to_edge];
 
@@ -196,6 +197,7 @@ if(par.out.units==1)    %if given in standard, convert to SI at given gas gravit
     diameter=diameter*inch_to_m; pipe_length=pipe_length*miles_to_km;
     flow_min=flow_min*mmscfd_to_kgps;
     flow_max=flow_max*mmscfd_to_kgps;
+    hp_max=hp_max*hp_to_watt;
 end
 
 fid = fopen([mfolder '\input_network.txt'],'w');

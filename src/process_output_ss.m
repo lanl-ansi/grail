@@ -9,6 +9,7 @@ psi_to_pascal=ss.c.psi_to_pascal;
 mpa_to_psi=1000000/psi_to_pascal;
 ss.c.mpa_to_psi=mpa_to_psi;
 mmscfd_to_kgps=ss.c.mmscfd_to_kgps;
+hp_to_watt=745.7;
 if(par.out.doZ==1), b1=ss.c.b1; b2=ss.c.b2; end
 
 %process optimization output
@@ -145,9 +146,9 @@ out.ss.flowbalrel(mean(out.ss.flowbal')./mean(out.ss.flowbalrel')<ss.m.opt_tol,:
 % end
 out.ss.ccopt=ss.cc0';
 cposopt=par.ss.m.comp_pos; m=ss.m.mpow;
-qcompopt=qq(:,cposopt(:,2)); cpow_nd=(abs(qcompopt)).*((ss.cc0').^(m)-1);
-out.ss.cpowopt=cpow_nd.*kron(ss.m.eff',ones(size(cpow_nd,1),1))*ss.c.mmscfd_to_hp/mmscfd_to_kgps;
-
+qcompopt=qq(:,cposopt(:,2)); %cpow_nd=(abs(qcompopt)).*((ss.cc0').^(m)-1);
+%out.ss.cpowopt=cpow_nd.*kron(ss.m.eff',ones(size(cpow_nd,1),1))*ss.c.mmscfd_to_hp/mmscfd_to_kgps;
+out.ss.cpowopt=(abs(qcompopt)).*((ss.cc0').^(m)-1)*ss.m.Wc;   %comp power in Watts
 
 %process locational marginal price
 % out.ss.lmptr=par.ss.lmp0(par.ss.m.flexnodes,:)'/2*par.ss.m.N/par.ss.m.odw*par.ss.c.Tsc*par.ss.c.Tsc/2;
@@ -177,6 +178,7 @@ if(par.out.units==1), out.ss.trlmp=out.ss.trlmp*mmscfd_to_kgps;
      out.ss.gdlmp=out.ss.gdlmp*mmscfd_to_kgps; out.ss.gslmp=out.ss.gslmp*mmscfd_to_kgps; 
      out.ss.Prd=out.ss.Prd*mmscfd_to_kgps; out.ss.Prs=out.ss.Prs*mmscfd_to_kgps;
      out.ss.Prslack=out.ss.Prslack*mmscfd_to_kgps;
+     out.ss.cpowopt=out.ss.cpowopt/hp_to_watt;
      %if(par.out.ss.dosim==1), out.ss.lmpss=out.ss.lmpss*mmscfd_to_kgps; end
 end
 out.ss.lmpin=zeros(size(out.ss.ppinopt)); out.ss.lmpout=zeros(size(out.ss.ppoutopt));

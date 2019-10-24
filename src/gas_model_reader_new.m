@@ -120,7 +120,7 @@ end
 %         network.to_edge = edge # to which flow is boosted 
 %         network.c_min = min compression ratio
 %         network.c_max = max compression ratio     
-%         network.hp_max = max compressor power (hp)
+%         network.hp_max = max compressor power (watt)
 %         network.flow_min = min flow (kg/s)
 %         network.flow_max = max flow (kg/s)
 %         network.comp_bool = 1 if compressor on edge
@@ -128,9 +128,9 @@ loc_node=zeros(nc,1);    %location node for compressor
 to_edge=zeros(nc,1);     %to edge
 c_min=zeros(nc,1);       %min compression ratio
 c_max=zeros(nc,1);       %max compression ratio
-hp_max=zeros(nc,1);      %max compressor power (hp)
-flow_min=zeros(nc,1);      %max compressor power (hp)
-flow_max=zeros(nc,1);      %max compressor power (hp)
+hp_max=zeros(nc,1);      %max compressor power ()
+flow_min=zeros(nc,1);      %min compressor flow (kg/s)
+flow_max=zeros(nc,1);      %max compressor flow (kg/s)
 comp_bool=zeros(ne,1);   % = 1 if compressor on the edge, 0 otherwise
 for j=1:nc
       tline = fgetl(fid);

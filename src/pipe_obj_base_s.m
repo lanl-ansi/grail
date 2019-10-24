@@ -33,7 +33,7 @@ qcomp=q(clinks,:); fs=q(slinks,:);
 % end
 
 %efficiency objective
-ceff=sum((diag(xs(clinks))*abs(qcomp)).*((comps).^(2*m)-1),1)*w;
+ceff=sum((diag(xs(clinks))*abs(qcomp)).*((comps).^(m)-1),1)*w;
 csm=par.smsc*trace((D*comps')'*diag(sparse(w))*(D*comps')); %derivative penalty on comps
 %economic objective
 cecon=-sum(fd.*prd,1)*w+sum((diag(xs(slinks))*prslack).*fs,1)*w;

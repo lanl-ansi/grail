@@ -84,13 +84,13 @@ if(par.out.plotsolflow==1)
     %legend(num2str([out.PN;out.gunique]),'Location','SouthEast')
     legend(num2str([out.gunique]),'Location','SouthEast')
     subaxis(1,3,2,'SpacingHoriz',0.05),
-    plot(out.tt0,out.gdsol,'LineWidth',3), axis('tight'), xlabel('hours'),
+    plot(out.tt0,out.gdsol_all,'LineWidth',3), axis('tight'), xlabel('hours'),
     if(par.out.units==1), title('Demand gNode Purchases (mmscfd)','fontweight','bold'), else
         title('Demand gNode Purchases  (kg/s)','fontweight','bold'), end
     legend(num2str(out.gd),'Location','SouthEast')
     subaxis(1,3,3,'MarginRight',0.05,'SpacingHoriz',0.05),
     %plot(out.tt0,[out.supp_flow out.gssol],'LineWidth',3), axis('tight'), xlabel('hours'),
-    plot(out.tt0,[out.gssol],'LineWidth',3), axis('tight'), xlabel('hours'),
+    plot(out.tt0,[out.gssol_all],'LineWidth',3), axis('tight'), xlabel('hours'),
     if(par.out.units==1), title('Supply gNode Sales (mmscfd)','fontweight','bold'), else
         title('Supply gNode Sales  (kg/s)','fontweight','bold'), end
     legend(num2str([out.gs]),'Location','SouthEast')

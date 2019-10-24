@@ -37,10 +37,12 @@ par.out.ss_check_exit=inputpar(8,10);    % exit after steady-state feasibility c
 par.tr.c.gasT=inputpar(1,1);                      %gas temperature (K)
 par.tr.c.gasG=inputpar(2,1);                     %gas gravity 
 %gas gravity is relative to air = 28.9626. methane = 16.043, ethane = 30.070
-universalR=8314.472;
-par.tr.c.gasR=universalR/(28.9626*par.tr.c.gasG);
+universalR=8314.472;    %universal gas constant
+molecwghtAir=28.9626;   %Molecular weight of air (g mol)
+par.tr.c.gasR=universalR/(molecwghtAir*par.tr.c.gasG);  %molecular weight of gas
 par.tr.c.a=sqrt(par.tr.c.gasR*par.tr.c.gasT);
-par.tr.c.mpow=(inputpar(3,1)-1)/inputpar(3,1);  	%specific heat capacity ratio
+par.tr.c.gamm=inputpar(3,1);            %specific heat capacity ratio
+par.tr.c.mpow=(par.tr.c.gamm-1)/par.tr.c.gamm;  	
 par.tr.m.fuelfactor=inputpar(4,1);         %fuel factor for compressors
 par.tr.c.T=3600*inputpar(5,1);                   %time horizon
 par.out.doZ=inputpar(6,1);      %include compressibility?
@@ -111,11 +113,12 @@ if(par.out.doss==1 || par.out.dosim==1)
     par.out.ss=par.out;
     par.ss.Nvec=[0];    % vector of time discretization orders for optimization sequence (steady state)
     par.ss.lmax=1;      % max segment length (km) (steady state)
-    if(par.out.dosim==0) par.ss.lmax=1000; end
+    %if(par.out.dosim==0) par.ss.lmax=1; end
     par.ss.c.T=par.tr.c.T;
     par.ss.c.gasR=par.tr.c.gasR;                      %gas constant R (J/kg K)
     par.ss.c.gasT=par.tr.c.gasT;                      %gas temperature (K)
     par.ss.c.gasG=par.tr.c.gasG;                     %gas gravity 
+    par.ss.c.gamm=par.tr.c.gamm;                    %specific heat capacity ratio
     par.ss.c.a=par.tr.c.a; par.ss.c.mpow=par.tr.c.mpow; par.ss.m.fuelfactor=par.tr.m.fuelfactor;     
     par.ss.m.econweight=par.tr.m.econweight;
     par.ss.m.pdcstr=par.tr.m.pdcstr; par.ss.m.cpowcstr=par.tr.m.cpowcstr;

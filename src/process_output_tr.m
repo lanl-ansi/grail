@@ -10,6 +10,7 @@ psi_to_pascal=tr.c.psi_to_pascal;
 mpa_to_psi=1000000/psi_to_pascal;
 tr.c.mpa_to_psi=mpa_to_psi;
 mmscfd_to_kgps=tr.c.mmscfd_to_kgps;
+hp_to_watt=745.7;
 if(par.out.doZ==1), b1=tr.c.b1; b2=tr.c.b2; end
 
 %process simulation output
@@ -176,8 +177,8 @@ if(par.out.dosim==1)
 end
 out.ccopt=tr.cc0';
 cposopt=par.tr.m.comp_pos; m=tr.m.mpow;
-qcompopt=qq(:,cposopt(:,2)); cpow_nd=(abs(qcompopt)).*((tr.cc0').^(m)-1);
-out.cpowopt=cpow_nd.*kron(tr.m.eff',ones(size(cpow_nd,1),1))*tr.c.mmscfd_to_hp/mmscfd_to_kgps;
+qcompopt=qq(:,cposopt(:,2)); %cpow_nd=(abs(qcompopt)).*((tr.cc0').^(m)-1);
+out.cpowopt=(abs(qcompopt)).*((tr.cc0').^(m)-1)*tr.m.Wc;   %comp power in Watts
 
 %process locational marginal price
 % out.lmptr=par.tr.lmp0(par.tr.m.flexnodes,:)'/2*par.tr.m.N/par.tr.m.odw*par.tr.c.Tsc*par.tr.c.Tsc/2;
@@ -207,6 +208,7 @@ if(par.out.units==1), out.trlmp=out.trlmp*mmscfd_to_kgps;
      out.gdlmp=out.gdlmp*mmscfd_to_kgps; out.gslmp=out.gslmp*mmscfd_to_kgps; 
      out.Prd=out.Prd*mmscfd_to_kgps; out.Prs=out.Prs*mmscfd_to_kgps;
      out.Prslack=out.Prslack*mmscfd_to_kgps;
+     out.cpowopt=out.cpowopt/hp_to_watt;
      %if(par.out.dosim==1), out.lmpss=out.lmpss*mmscfd_to_kgps; end
 end
 out.lmpin=zeros(size(out.ppinopt)); out.lmpout=zeros(size(out.ppoutopt));

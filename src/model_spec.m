@@ -5,9 +5,10 @@ function [par]=model_spec(par)
 par.c.psi_to_pascal=6894.75729;
 par.c.km_to_m=1000;
 universalR=8314.472;    %J/k-mol * K
+molecwghtAir=28.9626;   %Molecular weight of air (g mol)
 oneATM=101.325;     %Pascal
 %par.c.mmscfd_to_kgps=0.24085926;   convert at given gas gravity and temp. below
-par.c.mmscfd_to_kgps=(10^3)*0.02832/86400*(oneATM/(universalR*par.c.gasT)*(100)^3)*par.c.gasG*28.9626; %conversion notes
+par.c.mmscfd_to_kgps=(10^3)*0.02832/86400*(oneATM/(universalR*par.c.gasT)*(100)^3)*par.c.gasG*molecwghtAir; %conversion notes
 par.c.mmscfd_to_hp=1000/0.0593807;  %fix this later (should depend also on calorific value)
 %par.c.inch_to_m=2.54/100;
 %par.c.miles_to_m=1609.34;
@@ -111,9 +112,10 @@ end
 if(par.m.doZ==1), Zsc=(par.c.b1+par.c.b2*par.n.p_min(par.n.comp_pos(:,1)))./(par.c.b1+par.c.b2*par.n.p_max(par.n.comp_pos(:,1))); else
     Zsc=1; end
 par.m.eff=par.m.fuelfactor./((par.n.c_max.*Zsc).^par.m.mpow-1); 	%fuel factor
-%par.m.eff=0.00075; 	%fuel factor
-%par.m.eff=0.00025;
 
-par.m.boost_pow_max_nd=(1./par.m.eff).*par.n.hp_max/par.c.mmscfd_to_hp*par.c.mmscfd_to_kgps/par.c.qsc;
+%par.m.boost_pow_max_nd=(1./par.m.eff).*par.n.hp_max/par.c.mmscfd_to_hp*par.c.mmscfd_to_kgps/par.c.qsc;
+par.m.Wc=286.76/par.c.gasG*par.c.gasT*(par.c.gamm/(par.c.gamm-1));
+par.m.boost_pow_max_nd=par.n.hp_max/par.m.Wc/par.c.qsc;
+
 par.m.flow_min_nd=par.n.flow_min/par.c.qsc;
 par.m.flow_max_nd=par.n.flow_max/par.c.qsc;

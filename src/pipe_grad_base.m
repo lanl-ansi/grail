@@ -32,9 +32,9 @@ cxeff=zeros(N1*(M+C+GN),1);
 cxecon=zeros(N1*(M+C+GN),1);
 for j=1:C
     %dcdq
-    cxeff(N1*FN+clinks(j):NE:N1*FN+NE*(N1-1)+clinks(j))=xsc(j)*sign(qcomp(j,:)').*((comps(j,:)').^(2*m)-1).*w;
+    cxeff(N1*FN+clinks(j):NE:N1*FN+NE*(N1-1)+clinks(j))=xsc(j)*sign(qcomp(j,:)').*((comps(j,:)').^(m)-1).*w;
     %dcdc
-    cxeff(N1*M+j:C:N1*M+C*(N1-1)+j)=2*m*abs(qcomp(j,:)'*xsc(j)).*((comps(j,:)').^(2*m-1)).*w;
+    cxeff(N1*M+j:C:N1*M+C*(N1-1)+j)=m*abs(qcomp(j,:)'*xsc(j)).*((comps(j,:)').^(m-1)).*w;
 end
 for j=1:length(slinks)
     %dedfs

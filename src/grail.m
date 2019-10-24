@@ -1,5 +1,5 @@
 %% Gas Transient Optimization and Simulation
-% Anatoly Zlotnik, updated January 2019
+% Anatoly Zlotnik, updated September 2019
 function [par]=grail(fpath)
 
 % 1) steady state optimization
@@ -16,10 +16,6 @@ function [par]=grail(fpath)
 
 %% Input data for problem definition
 %clear
-
-%expiration
-%datestr=date;
-%if(datenum(datestr)>datenum('30-Mar-2018')), return; end
 
 if(nargin==0)
     fnameid=fopen('model_folder.txt');
@@ -72,13 +68,15 @@ par.ss=econ_spec(par.ss,par.mfolder);
 
 % Solve optimization
 [par.ss]=tran_opt_base(par.ss);
-%save(['model' num2str(par_ss.mod_num) '_' num2str(par_ss.lmax) 'km_ss'],'par_ss')
 
+%exit if not solved
 if(par.ss.ip_info.status~=0), disp('Steady state optimization not feasible'), 
     fid=fopen([par.mfolder '\output_log.txt'],'w');
     fprintf(fid,['Steady-state solve status: ' num2str(par.ss.ip_info.status) '\n']);
     fclose(fid);
 end
+
+%process steady-state output
 if(par.out.steadystateonly==1), [par]=process_output_ss(par); if(par.out.intervals_out>0), gas_out_plots_i(par); end; return; end
 if(par.out.ss_check_exit==1), return; end
 end

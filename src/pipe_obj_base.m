@@ -1,4 +1,4 @@
-function [c]=pipe_obj_base(x,par)
+function [c,cecon_o,ceff_o]=pipe_obj_base(x,par)
 
 %index parameters
 N1=par.N1; N=par.N; M=par.M; C=par.C; FN=par.FN; NE=par.NE; GN=par.GN;
@@ -26,9 +26,11 @@ qcomp=q(clinks,:); fs=q(slinks,:);
 
 
 %efficiency objective
-ceff=sum((diag(xs(clinks))*abs(qcomp)).*((comps).^(2*m)-1),1)*w;
+ceff=sum((diag(xs(clinks))*abs(qcomp)).*((comps).^(m)-1),1)*w;
 %economic objective
 cecon=-sum(fd.*par.prd,1)*w+sum((diag(xs(slinks))*par.prslack).*fs,1)*w;
 
 %output objective
+cecon_o=(Ts/2)*cecon/par.objsc;
+ceff_o=(Ts/2)*ceff/par.objsc;
 c=(Ts/2)*(ceff*(1-ew)+cecon*ew)/par.objsc;

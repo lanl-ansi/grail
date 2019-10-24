@@ -1,0 +1,5 @@
+﻿pipe_id,pipe_name,from_node,to_node,diameter,length,friction_factor,disc_seg
+1,Pipe1,5,2,0.6,50,0.01,0
+2,Pipe2,2,3,0.6,80,0.01,0
+3,Pipe3,6,4,0.6,80,0.01,0
+4,Pipe4,3,4,0.3,80,0.01,0
